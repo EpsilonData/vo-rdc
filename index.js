@@ -6,6 +6,8 @@ const PART_SPLITTER = "^^^";
 const RequestDataContainer = function RequestDataContainer (version, source) {
 
   this.version = version;
+  this.accessCode = "*";
+
   this.deepProfileLeftSideData = {
     "source": source || null,
     "converterId": null,
@@ -20,6 +22,10 @@ const RequestDataContainer = function RequestDataContainer (version, source) {
     "convert_email": null
   };
 
+};
+
+RequestDataContainer.prototype.setAccessCode = function (accessCode) {
+  this.accessCode = accessCode;
 };
 
 RequestDataContainer.prototype.setConverter = function (converterId) {
@@ -42,13 +48,14 @@ RequestDataContainer.prototype.toString = function toString () {
   let s = "";
   // version
   s += this.version;
-  // ...
+  s += PART_SPLITTER;
+  // access code
+  s += this.accessCode;
   s += PART_SPLITTER;
   // deepProfileLeftSideData
   s += Object.keys(this.deepProfileLeftSideData).map(deepProfileLeftSideDataKey => {
     return this.deepProfileLeftSideData[deepProfileLeftSideDataKey];
   }).join(",");
-  // ...
   s += PART_SPLITTER;
   // deepProfileRightSideData
   s += Object.keys(this.deepProfileRightSideData).map(deepProfileRightSideDataKey => {
@@ -70,8 +77,8 @@ RequestDataContainer.prototype.fromString = function fromString (string) {
     return;
   }
   let parts = string.toString().split(PART_SPLITTER);
-  if (parts.length !== 3) {
-    console.log('rdc: wrong parts number (not 3)');
+  if (parts.length !== 4) {
+    console.log('rdc: wrong parts number (needs 4)');
     return;
   }
   let version = parseInt(parts[0]) || null;
@@ -80,15 +87,17 @@ RequestDataContainer.prototype.fromString = function fromString (string) {
     return;
   }
   this.version = version;
+  // access code
+  this.accessCode = parts[1];
   // deepProfileLeftSideData
   let deepProfileLeftSideDataKeys = Object.keys(this.deepProfileLeftSideData);
-  parts[1].split(",").forEach((value, valueIndex) => {
+  parts[2].split(",").forEach((value, valueIndex) => {
     let key = deepProfileLeftSideDataKeys[valueIndex];
     this.deepProfileLeftSideData[key] = processKeyValue(key, value);
   });
   // deepProfileRightSideData
   let deepProfileRightSideDataKeys = Object.keys(this.deepProfileRightSideData);
-  parts[2].split(",").forEach((value, valueIndex) => {
+  parts[3].split(",").forEach((value, valueIndex) => {
     let key = deepProfileRightSideDataKeys[valueIndex] || "unsupported"; // don't ask, prevents a crash
     this.deepProfileRightSideData[key] = processKeyValue(key, value);
   });
