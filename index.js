@@ -15,7 +15,9 @@ const RequestDataContainer = function RequestDataContainer (version, source) {
 
   this.deepProfileRightSideData = {
     "TwitterHandle": null,
-    "LinkedInHandle": null
+    "LinkedInHandle": null,
+    "convert_name": null,
+    "convert_email": null
   };
 
 };
@@ -58,7 +60,7 @@ RequestDataContainer.prototype.toString = function toString () {
 RequestDataContainer.prototype.fromString = function fromString (string) {
   let processKeyValue = (key, value) => {
     if (value === "") return null;
-    if (key.substring(key.length - 2) === "Id") {
+    if (key.toString().substring(key.length - 2) === "Id") {
       return parseInt(value) || null;
     }
     return value;
@@ -87,7 +89,7 @@ RequestDataContainer.prototype.fromString = function fromString (string) {
   // deepProfileRightSideData
   let deepProfileRightSideDataKeys = Object.keys(this.deepProfileRightSideData);
   parts[2].split(",").forEach((value, valueIndex) => {
-    let key = deepProfileRightSideDataKeys[valueIndex];
+    let key = deepProfileRightSideDataKeys[valueIndex] || "unsupported"; // don't ask, prevents a crash
     this.deepProfileRightSideData[key] = processKeyValue(key, value);
   });
 };
