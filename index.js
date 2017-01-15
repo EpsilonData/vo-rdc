@@ -1,5 +1,7 @@
 "use strict";
 
+const base64 = require("./base64.js");
+
 const CURRENT_VERSION = 1;
 const PART_SPLITTER = "^^^";
 
@@ -61,7 +63,8 @@ RequestDataContainer.prototype.toString = function toString () {
   s += Object.keys(this.deepProfileRightSideData).map(deepProfileRightSideDataKey => {
     return this.deepProfileRightSideData[deepProfileRightSideDataKey]
   }).join(",");
-  return s;
+  let r = base64.encode(s);
+  return r;
 };
 
 RequestDataContainer.prototype.fromString = function fromString (string) {
@@ -76,7 +79,8 @@ RequestDataContainer.prototype.fromString = function fromString (string) {
     console.log('rdc: string null');
     return;
   }
-  let parts = string.toString().split(PART_SPLITTER);
+  let un = base64.decode(string);
+  let parts = un.split(PART_SPLITTER);
   if (parts.length !== 4) {
     console.log('rdc: wrong parts number (needs 4)');
     return;
