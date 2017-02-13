@@ -19,7 +19,8 @@ const RequestDataContainer = function RequestDataContainer (version, source) {
     "TwitterHandle": null,
     "LinkedInHandle": null,
     "convert_name": null,
-    "convert_email": null
+    "convert_email": null,
+    "convert_phone": null
   };
 
 };
