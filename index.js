@@ -3,6 +3,16 @@
 const CURRENT_VERSION = 1;
 const PART_SPLITTER = "^^^";
 
+let processKeyValue = (key, value) => {
+  if (value === "") return null;
+  if (value === "0") return 0;
+  if (value === "1") return 1;
+  if (key.toString().substring(key.length - 2) === "Id") {
+    return parseInt(value) || null;
+  }
+  return value;
+};
+
 const RequestDataContainer = function RequestDataContainer (version, source) {
 
   this.version = version;
@@ -12,15 +22,31 @@ const RequestDataContainer = function RequestDataContainer (version, source) {
     "source": source || null,
     "converterId": null,
     "creeperId": null,
-    "creeperActionId": null
+    "creeperActionId": null,
+    "feedbackHash": null
   };
 
   this.deepProfileRightSideData = {
-    "TwitterHandle": null,
-    "LinkedInHandle": null,
+    "generic_TwitterHandle": null,
+    "generic_LinkedInHandle": null,
     "convert_name": null,
     "convert_email": null,
-    "convert_phone": null
+    "convert_phone": null,
+    "feedback_firstName": null,
+    "feedback_lastName": null,
+    "feedback_email": null,
+    "feedback_phone": null,
+    "feedback_templateName": null,
+    "feedback_fieldCompany": null,
+    "feedback_fieldReferralSource": null,
+    "feedback_fieldSeniority": null,
+    "feedback_fieldLanguage": null,
+    "feedback_fieldVehicleType": null,
+    "feedback_fieldSector": null,
+    "feedback_fieldDestination": null,
+    "feedback_fieldBudget": null,
+    "feedback_fieldReferralLocation": null,
+    "feedback_fieldService": null
   };
 
 };
@@ -67,13 +93,6 @@ RequestDataContainer.prototype.toString = function toString () {
 };
 
 RequestDataContainer.prototype.fromString = function fromString (string) {
-  let processKeyValue = (key, value) => {
-    if (value === "") return null;
-    if (key.toString().substring(key.length - 2) === "Id") {
-      return parseInt(value) || null;
-    }
-    return value;
-  };
   if (string === null) {
     console.log('rdc: string null');
     return;
